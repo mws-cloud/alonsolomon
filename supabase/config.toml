@@ -1,0 +1,13 @@
+project_id = "emkrjhmlorbjqaltivpo"
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.lead-action]
+verify_jwt = false
+
+[functions.lead-reminders]
+verify_jwt = false
+
+[functions.admin-leads]
+verify_jwt = false

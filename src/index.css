@@ -1,0 +1,413 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════
+   LUXURY LAW FIRM DESIGN SYSTEM
+   Apple-inspired • Gold & Dark • Glassmorphism
+   ═══════════════════════════════════════════════════════ */
+
+@layer base {
+  :root {
+    /* Alon Solomon 2026 — Navy + Gold palette */
+    --background: 39 32% 95%;      /* #F7F4EE cream */
+    --foreground: 220 30% 10%;     /* darker ink for better readability */
+
+    --card: 0 0% 100%;             /* #FFFFFF */
+    --card-foreground: 220 26% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 26% 17%;
+
+    --primary: 218 51% 24%;        /* #1E355E Primary Navy */
+    --primary-foreground: 39 32% 95%;
+
+    --secondary: 37 38% 91%;
+    --secondary-foreground: 220 26% 17%;
+
+    --muted: 37 26% 92%;
+    --muted-foreground: 220 25% 18%; /* much darker muted for readability */
+
+    --accent: 41 55% 51%;          /* #C89A3D Gold */
+    --accent-foreground: 220 26% 17%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 35 18% 88%;
+    --input: 35 18% 88%;
+    --ring: 41 55% 51%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 218 52% 17%;   /* Dark Navy */
+    --sidebar-foreground: 39 32% 95%;
+    --sidebar-primary: 41 55% 51%;
+    --sidebar-primary-foreground: 218 52% 17%;
+    --sidebar-accent: 218 51% 24%;
+    --sidebar-accent-foreground: 39 32% 95%;
+    --sidebar-border: 218 40% 30%;
+    --sidebar-ring: 41 55% 51%;
+  }
+
+  .dark {
+    --background: 228 73% 9%;
+    --foreground: 40 14% 98%;
+
+    --card: 228 70% 13%;
+    --card-foreground: 40 14% 98%;
+
+    --popover: 228 70% 13%;
+    --popover-foreground: 40 14% 98%;
+
+    --primary: 43 52% 54%;
+    --primary-foreground: 228 73% 9%;
+
+    --secondary: 228 60% 16%;
+    --secondary-foreground: 40 14% 98%;
+
+    --muted: 228 50% 18%;
+    --muted-foreground: 35 12% 60%;
+
+    --accent: 43 52% 54%;
+    --accent-foreground: 228 73% 9%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 228 50% 20%;
+    --input: 228 50% 20%;
+    --ring: 43 52% 54%;
+
+    --sidebar-background: 228 73% 7%;
+    --sidebar-foreground: 40 14% 98%;
+    --sidebar-primary: 43 52% 54%;
+    --sidebar-primary-foreground: 228 73% 9%;
+    --sidebar-accent: 228 60% 13%;
+    --sidebar-accent-foreground: 40 14% 98%;
+    --sidebar-border: 228 60% 15%;
+    --sidebar-ring: 43 52% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+    letter-spacing: 0.03em;
+    font-weight: 300;
+  }
+
+  h1 { font-weight: 300; }
+  h2 { font-weight: 400; }
+  h3 { font-weight: 400; }
+
+  html {
+    font-size: 17.5px;
+    scroll-behavior: smooth;
+    /* Offset for fixed 80px header so anchors don't hide behind it */
+    scroll-padding-top: 5rem;
+  }
+
+  html[dir="rtl"],
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* Explicit element-level font assignments */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Frank Ruhl Libre", Georgia, serif;
+  }
+
+  p, span, a, li, label, input, textarea, button {
+    font-family: "Assistant", sans-serif;
+  }
+
+  /* Force strong contrast for low-opacity dark text on light backgrounds */
+  .text-dark\/50,
+  .text-dark\/60,
+  .text-dark\/70,
+  .text-dark\/80,
+  .text-ink\/50,
+  .text-ink\/60,
+  .text-ink\/70,
+  .text-ink\/80,
+  .text-foreground\/50,
+  .text-foreground\/60,
+  .text-foreground\/70,
+  .text-foreground\/80,
+  .text-navy\/50,
+  .text-navy\/60,
+  .text-navy\/70,
+  .text-navy\/80,
+  .text-midnight\/50,
+  .text-midnight\/60,
+  .text-midnight\/70,
+  .text-midnight\/80 {
+    color: #1F2937 !important;
+    opacity: 1 !important;
+  }
+}
+
+@layer utilities {
+  /* Gold text gradient */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #C89A3D 0%, #DBB565 50%, #8C6A1E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Section backgrounds */
+  .bg-gradient-navy {
+    background: #142744;
+  }
+
+  .bg-dark-section {
+    background: #142744;
+  }
+
+  .bg-midnight-section {
+    background: #1E355E;
+  }
+
+  .bg-cream-section {
+    background: #F7F4EE;
+  }
+
+  /* Glassmorphism panels (dark sections) */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(200, 154, 61, 0.20);
+  }
+
+  .glass-panel-dark {
+    background: rgba(20, 39, 68, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(200, 154, 61, 0.18);
+  }
+
+  .glass-nav {
+    background: rgba(20, 39, 68, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* Light-section card (cream bg) */
+  .card-light {
+    background: #FFFFFF;
+    border: 1px solid #E5E1D8;
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+  }
+  .card-light:hover {
+    border-color: rgba(200, 154, 61, 0.6);
+    box-shadow: 0 8px 24px -12px rgba(30, 53, 94, 0.12);
+    transform: translateY(-3px);
+  }
+
+  /* Gold glow border on hover */
+  .gold-glow-hover {
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+  }
+  .gold-glow-hover:hover {
+    box-shadow: 0 0 0 1px rgba(200, 154, 61, 0.45);
+    transform: translateY(-4px);
+  }
+
+  /* Gold horizontal divider */
+  .gold-divider {
+    height: 1px;
+    background: rgba(200, 154, 61, 0.32);
+    border: none;
+  }
+
+  /* Subtle noise — only for hero / heavy accent sections */
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.018;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    z-index: 0;
+  }
+
+  /* Gold radial glow (hero only) */
+  .hero-glow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 55%;
+    background: radial-gradient(ellipse at center bottom, rgba(200, 154, 61, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* CTA button system */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: #C89A3D;
+    color: #142744;
+    font-family: "Assistant", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid #C89A3D;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
+  }
+  .btn-primary:hover {
+    background: #B8872E;
+    border-color: #B8872E;
+  }
+  .btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(20, 39, 68, 0.18);
+  }
+  .btn-primary:focus-visible {
+    outline: 2px solid #C89A3D;
+    outline-offset: 3px;
+  }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: #1E355E;
+    font-family: "Assistant", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid #1E355E;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  }
+  .btn-secondary:hover {
+    background: #1E355E;
+    color: #F7F4EE;
+  }
+  .btn-secondary:active {
+    transform: translateY(1px);
+  }
+  .btn-secondary:focus-visible {
+    outline: 2px solid #C89A3D;
+    outline-offset: 3px;
+  }
+  .btn-secondary-on-dark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: #F7F4EE;
+    font-family: "Assistant", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid #F7F4EE;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  }
+  .btn-secondary-on-dark:hover {
+    background: #F7F4EE;
+    color: #1E355E;
+  }
+  .btn-secondary-on-dark:active {
+    transform: translateY(1px);
+  }
+  .btn-secondary-on-dark:focus-visible {
+    outline: 2px solid #C89A3D;
+    outline-offset: 3px;
+  }
+
+  /* Scroll-triggered fade up (use with JS IntersectionObserver) */
+  .fade-up-hidden {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .fade-up-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  /* Section label (small caps) */
+  .section-label {
+    font-family: "Assistant", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #C89A3D;
+  }
+
+  /* Elegant no-shadow card border */
+  .shadow-elegant {
+    box-shadow: none;
+    border: 1px solid rgba(200, 154, 61, 0.22);
+  }
+
+  .border-gold {
+    border-color: #C89A3D;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .fade-up-hidden {
+    opacity: 1;
+    transform: none;
+  }
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .animate-pulse-line {
+    animation: none !important;
+  }
+
+  .glass-navy {
+    background: hsl(220 45% 20% / 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .section-divider {
+    position: relative;
+  }
+
+  .section-divider::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, hsl(38 70% 50%), transparent);
+  }
+}
