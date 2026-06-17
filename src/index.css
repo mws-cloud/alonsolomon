@@ -127,7 +127,7 @@
 
   /* Explicit element-level font assignments */
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Frank Ruhl Libre", Georgia, serif;
+    font-family: "Heebo", sans-serif;
   }
 
   p, span, a, li, label, input, textarea, button {

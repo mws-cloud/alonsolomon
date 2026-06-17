@@ -83,9 +83,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        serif: ['"Frank Ruhl Libre"', "Georgia", "serif"],
+        serif: ['"Heebo"', "sans-serif"],
         sans: ['"Assistant"', "sans-serif"],
-        heading: ['"Frank Ruhl Libre"', "serif"],
+        heading: ['"Heebo"', "sans-serif"],
         body: ['"Assistant"', "sans-serif"],
       },
       letterSpacing: {
