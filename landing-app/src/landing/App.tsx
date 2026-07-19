@@ -204,7 +204,7 @@ function LeadForm({ c }: { c: ContentMap }) {
             <input type="checkbox" id="fconsent" name="fconsent" required />
             <span>
               אני מאשר/ת את השימוש בפרטיי לצורך יצירת קשר, דיוור ישיר וניתוחים סטטיסטיים, בהתאם ל
-              <a href="/privacy" target="_blank" rel="noopener">מדיניות הפרטיות</a>.
+              <a href="privacy/" target="_blank" rel="noopener">מדיניות הפרטיות</a>.
             </span>
           </label>
         </div>
@@ -359,7 +359,8 @@ export default function App() {
             <a href="https://a-solomon.com" target="_blank" rel="noopener noreferrer">לאתר המשרד — a-solomon.com</a>
           </p>
           <p>
-            <a href="/privacy">מדיניות פרטיות</a> · <a href="/accessibility">הצהרת נגישות</a>
+            <a href="privacy/" target="_blank" rel="noopener">מדיניות פרטיות</a> ·{" "}
+            <a href="accessibility/" target="_blank" rel="noopener">הצהרת נגישות</a>
           </p>
         </div>
       </footer>
