@@ -129,6 +129,22 @@ function LeadForm({ c }: { c: ContentMap }) {
           client_note: note,
         }),
       }).catch(() => undefined);
+      // כתיבה כפולה: FORM_ENDPOINT (הענן הישן) שולח את המייל לעו"ד, אבל
+      // שומר במסד הישן; הפאנל קורא מהמסד החדש — לכן הליד נשמר גם בו ישירות.
+      // להסיר יחד עם החזרת FORM_ENDPOINT לשרת החדש (ראו config.ts).
+      supabase
+        .from("leads")
+        .insert({
+          name,
+          phone,
+          message: "מקור: דף נחיתה — תכנית שכר טרחת מינימום\nשער כניסה: " + gate,
+          form_type: LEAD_SOURCE,
+          status: "new",
+          proceedings_started: yesNo(proc) === "yes",
+          is_represented: yesNo(rep) === "yes",
+          client_note: note || null,
+        })
+        .then(() => undefined, () => undefined);
     } catch {
       /* הליד ממשיך לוואטסאפ גם אם הרשת נכשלה */
     }
