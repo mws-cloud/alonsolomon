@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, FormEvent } from "react";
-import type { Session } from "@supabase/supabase-js";
+import { createClient, type Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
-import { LEAD_SOURCE } from "../lib/config";
+import { LEAD_SOURCE, SUPABASE_ANON_KEY, SUPABASE_URL } from "../lib/config";
 import { defaultContent, contentSections, ContentMap } from "../landing/content";
 import "./admin.css";
 
@@ -365,11 +365,170 @@ function ContentTab() {
   );
 }
 
+/* ---------- טאב משתמשים ---------- */
+// לקוח נפרד להרשמה: אחרת signUp היה מחליף את הסשן של המנהל המחובר.
+const signupClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false, storageKey: "sb-panel-signup" },
+});
+
+interface PanelUser {
+  email: string;
+  created_at: string;
+}
+
+function UsersTab({ myEmail }: { myEmail: string }) {
+  const [users, setUsers] = useState<PanelUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadErr, setLoadErr] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [okMsg, setOkMsg] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+
+  const load = async () => {
+    setLoading(true);
+    setLoadErr("");
+    const { data, error } = await supabase
+      .from("panel_users")
+      .select("email,created_at")
+      .order("created_at", { ascending: true });
+    if (error) setLoadErr(error.message);
+    else setUsers((data as PanelUser[]) ?? []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const addUser = async (e: FormEvent) => {
+    e.preventDefault();
+    setOkMsg("");
+    setErrMsg("");
+    const email = newEmail.trim().toLowerCase();
+    if (newPass.length < 8) {
+      setErrMsg("הסיסמה חייבת להכיל לפחות 8 תווים.");
+      return;
+    }
+    setBusy(true);
+
+    // שלב 1: יצירת המשתמש במערכת האימות.
+    const { data, error: signErr } = await signupClient.auth.signUp({
+      email,
+      password: newPass,
+    });
+    if (signErr && !/already|registered|exists/i.test(signErr.message)) {
+      setErrMsg(
+        /mail|smtp|send/i.test(signErr.message)
+          ? "השרת לא מצליח לשלוח מייל אישור. יש לבקש מהמתכנת להפעיל אישור אוטומטי (GOTRUE_MAILER_AUTOCONFIRM=true) — ואז ההוספה תעבוד מיידית."
+          : "יצירת המשתמש נכשלה: " + signErr.message
+      );
+      setBusy(false);
+      return;
+    }
+
+    // שלב 2: הוספה לרשימת המורשים — בלעדיה אין גישה לנתונים.
+    const { error: insErr } = await supabase
+      .from("panel_users")
+      .insert({ email, added_by: myEmail });
+    if (insErr && !/duplicate|already exists/i.test(insErr.message)) {
+      setErrMsg("המשתמש נוצר אך הוספתו להרשאות נכשלה: " + insErr.message);
+      setBusy(false);
+      return;
+    }
+
+    const needsConfirm = !signErr && !data?.session && data?.user && !data.user.email_confirmed_at;
+    setOkMsg(
+      needsConfirm
+        ? `${email} נוסף. נשלח אליו מייל אישור — הכניסה תתאפשר אחרי לחיצה על הקישור שבמייל.`
+        : `${email} נוסף בהצלחה ויכול להתחבר עכשיו עם הסיסמה שהוגדרה.`
+    );
+    setNewEmail("");
+    setNewPass("");
+    setBusy(false);
+    load();
+  };
+
+  const removeUser = async (email: string) => {
+    if (email === myEmail.toLowerCase()) {
+      alert("אי אפשר להסיר את המשתמש שאיתו אתם מחוברים כרגע.");
+      return;
+    }
+    if (!confirm(`להסיר את הגישה של ${email} לפאנל?`)) return;
+    const { error } = await supabase.from("panel_users").delete().eq("email", email);
+    if (error) alert("ההסרה נכשלה: " + error.message);
+    else load();
+  };
+
+  if (loading) return <div className="spin">טוען משתמשים…</div>;
+
+  if (loadErr) {
+    return (
+      <div className="notice">
+        <b>ניהול המשתמשים עדיין לא הופעל.</b>
+        <br />
+        יש לוודא שהמיגרציות האחרונות הוחלו על מסד הנתונים (נעשה אוטומטית בדחיפה ל-main).
+        <br />
+        <small dir="ltr">{loadErr}</small>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <p className="content-intro">
+        המשתמשים ברשימה יכולים להיכנס לפאנל, לצפות בלידים ולערוך את תוכן הדף.
+        הסרה מהרשימה חוסמת את הגישה מיידית.
+      </p>
+
+      <form className="user-add" onSubmit={addUser}>
+        <input
+          type="email"
+          required
+          dir="ltr"
+          placeholder="אימייל של המשתמש החדש"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          required
+          dir="ltr"
+          placeholder="סיסמה ראשונית (8+ תווים)"
+          value={newPass}
+          onChange={(e) => setNewPass(e.target.value)}
+          autoComplete="new-password"
+        />
+        <button className="btn btn-gold" type="submit" disabled={busy}>
+          {busy ? "מוסיף…" : "הוספת משתמש"}
+        </button>
+      </form>
+      {okMsg && <div className="save-ok user-msg">✓ {okMsg}</div>}
+      {errMsg && <div className="notice">{errMsg}</div>}
+
+      {users.map((u) => (
+        <div className="lead-card user-row" key={u.email}>
+          <div>
+            <div className="lead-name" dir="ltr">{u.email}</div>
+            <div className="lead-date">נוסף: {fmtDate(u.created_at)}</div>
+          </div>
+          {u.email === myEmail.toLowerCase() ? (
+            <span className="badge badge-new">מחובר/ת כעת</span>
+          ) : (
+            <button className="btn btn-ghost btn-sm" onClick={() => removeUser(u.email)}>
+              הסרת גישה
+            </button>
+          )}
+        </div>
+      ))}
+    </>
+  );
+}
+
 /* ---------- מסגרת הפאנל ---------- */
 export default function AdminApp() {
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
-  const [tab, setTab] = useState<"leads" | "content">("leads");
+  const [tab, setTab] = useState<"leads" | "content" | "users">("leads");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -406,9 +565,18 @@ export default function AdminApp() {
         <button className={`tab ${tab === "content" ? "active" : ""}`} onClick={() => setTab("content")}>
           תוכן הדף
         </button>
+        <button className={`tab ${tab === "users" ? "active" : ""}`} onClick={() => setTab("users")}>
+          משתמשים
+        </button>
       </div>
       <div className="panel-body">
-        {tab === "leads" ? <LeadsTab /> : <ContentTab />}
+        {tab === "leads" ? (
+          <LeadsTab />
+        ) : tab === "content" ? (
+          <ContentTab />
+        ) : (
+          <UsersTab myEmail={session.user.email ?? ""} />
+        )}
       </div>
     </>
   );
