@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, FormEvent, ReactNode } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import { supabase } from "../lib/supabase";
-import { FORM_ENDPOINT, LEAD_SOURCE, trackLead, waLink } from "../lib/config";
+import { FORM_ENDPOINT, LEAD_SOURCE, SUPABASE_ANON_KEY, SUPABASE_URL, trackLead, waLink } from "../lib/config";
 import { defaultContent, ContentMap } from "./content";
 import "./landing.css";
 
@@ -129,12 +129,21 @@ function LeadForm({ c }: { c: ContentMap }) {
           client_note: note,
         }),
       }).catch(() => undefined);
-      // כתיבה כפולה: FORM_ENDPOINT (הענן הישן) שולח את המייל לעו"ד, אבל
-      // שומר במסד הישן; הפאנל קורא מהמסד החדש — לכן הליד נשמר גם בו ישירות.
+      // כתיבה כפולה: FORM_ENDPOINT (הענן הישן) שולח את המייל לעו"ד אבל שומר
+      // במסד הישן; הפאנל קורא מהמסד החדש — לכן הליד נשמר גם בו ישירות.
+      // חובה fetch עם keepalive (ולא supabase-js): פתיחת וואטסאפ מנווטת את
+      // הטאב בנייד וקוטעת בקשות ללא keepalive — כך הליד היה אובד מהפאנל.
       // להסיר יחד עם החזרת FORM_ENDPOINT לשרת החדש (ראו config.ts).
-      supabase
-        .from("leads")
-        .insert({
+      fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+        method: "POST",
+        keepalive: true,
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
           name,
           phone,
           message: "מקור: דף נחיתה — תכנית שכר טרחת מינימום\nשער כניסה: " + gate,
@@ -143,8 +152,8 @@ function LeadForm({ c }: { c: ContentMap }) {
           proceedings_started: yesNo(proc) === "yes",
           is_represented: yesNo(rep) === "yes",
           client_note: note || null,
-        })
-        .then(() => undefined, () => undefined);
+        }),
+      }).catch(() => undefined);
     } catch {
       /* הליד ממשיך לוואטסאפ גם אם הרשת נכשלה */
     }
