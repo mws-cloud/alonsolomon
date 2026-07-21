@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Clock, Send, MessageCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -32,10 +31,20 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      const { data, error } = await supabase.functions.invoke("send-contact-email", {
-        body: { formType: "contact", ...formData },
-      });
-      if (error || (data as any)?.error) throw new Error(error?.message || (data as any)?.error);
+      // מנוע ה-edge functions בשרת המנוהל (mws) שבור ("worker boot error"),
+      // ולכן supabase.functions.invoke נכשל. שולחים ישירות לפונקציה בענן הישן
+      // שעדיין חיה ושולחת את המייל לעו"ד (verify_jwt=false — אין צורך במפתח).
+      // כשמנוע הפונקציות בשרת המנוהל יתוקן — אפשר לחזור ל-invoke.
+      const res = await fetch(
+        "https://emkrjhmlorbjqaltivpo.supabase.co/functions/v1/send-contact-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ formType: "contact", ...formData }),
+        }
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || (data as any)?.error) throw new Error((data as any)?.error || `HTTP ${res.status}`);
 
       toast({
         title: "הפנייה נשלחה",

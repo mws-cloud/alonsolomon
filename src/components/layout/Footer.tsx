@@ -92,6 +92,25 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="gold-divider mt-16 mb-8" />
         <div className="text-center">
+          <div className="flex items-center justify-center gap-6 mb-4">
+            <a
+              href="/privacy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#FAF9F6]/50 hover:text-gold transition-colors duration-300 font-body text-xs font-light tracking-wide"
+            >
+              מדיניות פרטיות
+            </a>
+            <span className="text-[#E8E4DC]/25 text-xs">|</span>
+            <a
+              href="/accessibility/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#FAF9F6]/50 hover:text-gold transition-colors duration-300 font-body text-xs font-light tracking-wide"
+            >
+              הצהרת נגישות
+            </a>
+          </div>
           <p className="text-[#E8E4DC]/40 font-body text-xs font-light tracking-wide">
             © {new Date().getFullYear()} משרד עו״ד אלון סולומון ושות׳. כל הזכויות שמורות.
           </p>
