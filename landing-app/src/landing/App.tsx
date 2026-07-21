@@ -102,15 +102,6 @@ function LeadForm({ c }: { c: ContentMap }) {
     const rep = val("frep");
     const note = val("fnote");
 
-    const msg =
-      "פנייה חדשה — תכנית שכר טרחת מינימום\n" +
-      "שם: " + name + "\n" +
-      "טלפון: " + phone + "\n" +
-      "שער כניסה: " + gate + "\n" +
-      "נפתחו הליכים: " + proc + "\n" +
-      "מיוצג כעת: " + rep +
-      (note ? "\nפרטים: " + note : "");
-
     const yesNo = (v: string) => (v.indexOf("כן") === 0 ? "yes" : "no");
 
     setSending(true);
@@ -159,8 +150,9 @@ function LeadForm({ c }: { c: ContentMap }) {
     }
 
     trackLead("form_submit");
-    window.open(waLink(msg), "_blank");
-    setSending(false);
+    // מעבר לעמוד התודה (במקום וואטסאפ). בקשות הליד למעלה משתמשות ב-keepalive
+    // ולכן שולחות במלואן גם אחרי הניווט. נתיב מוחלט כדי שיעבוד עם/בלי "/" בסוף.
+    window.location.href = "/program/thankyou/";
   };
 
   return (
