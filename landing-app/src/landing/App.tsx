@@ -46,10 +46,13 @@ const stagger = {
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
 };
 
-/* אם הדף נטען כשהטאב מוסתר (למשל נפתח בטאב ברקע) — מציגים את התוכן מיד,
-   בלי אנימציית כניסה, כדי שהדף לעולם לא ייראה ריק. */
+/* מציגים את התוכן מיד (בלי אנימציית כניסה) בשני מקרים:
+   1) בזמן prerender בשרת (אין document) — כדי שה-HTML הסטטי יהיה גלוי במלואו
+      לגוגל ולבוטים שלא מריצים JS.
+   2) כשהדף נטען בטאב מוסתר (נפתח ברקע) — כדי שלא ייראה ריק.
+   בטעינה רגילה בדפדפן startShown=false והאנימציות רצות כרגיל. */
 const startShown =
-  typeof document !== "undefined" && document.visibilityState === "hidden";
+  typeof document === "undefined" || document.visibilityState === "hidden";
 
 function Section({
   soft,
