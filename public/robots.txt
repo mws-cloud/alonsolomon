@@ -1,5 +1,5 @@
 # Sitemap
-Sitemap: https://solomon-law.co.il/sitemap.xml
+Sitemap: https://a-solomon.com/sitemap.xml
 
 User-agent: Googlebot
 Allow: /

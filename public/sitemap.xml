@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://solomon-law.co.il/</loc>
+    <loc>https://a-solomon.com/</loc>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://solomon-law.co.il/services</loc>
+    <loc>https://a-solomon.com/services</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://solomon-law.co.il/about</loc>
+    <loc>https://a-solomon.com/about</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://solomon-law.co.il/case-studies</loc>
+    <loc>https://a-solomon.com/case-studies</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://solomon-law.co.il/guides</loc>
+    <loc>https://a-solomon.com/guides</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://solomon-law.co.il/faq</loc>
+    <loc>https://a-solomon.com/faq</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://solomon-law.co.il/contact</loc>
+    <loc>https://a-solomon.com/contact</loc>
     <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://a-solomon.com/program/</loc>
+    <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>
